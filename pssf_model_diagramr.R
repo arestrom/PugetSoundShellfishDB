@@ -4,7 +4,7 @@
 # NOTES: 
 #  1. Should now be able to do using only DM. Need to test
 #
-# AS 2022-10-25
+# AS 2023-01-12
 #=================================================================
 
 # Clear workspace
@@ -59,7 +59,7 @@ pg_con_local = function(dbname, port = '5432') {
 #=====================================================================================
 
 # Define connection
-db_con = pg_con_local(dbname = "shellfish")
+db_con = pg_con_local(dbname = "ps_shellfish")
 
 # Pull out subset of tables for model
 sf_tables = dbListTables(db_con)
@@ -76,7 +76,7 @@ dbDisconnect(db_con)
 #=====================================================================================
 
 # Define vector of tables to drop
-drop_tables = c("spatial_ref_sys", "agency_lut")
+drop_tables = c("spatial_ref_sys")
 
 # Dump unneeded tables
 dm_sf = dm_sf %>% 
@@ -91,18 +91,18 @@ dm_sf_model = as.data_model(dm_sf)
 #=====================================================================================
 
 table_segments = list(
-  Survey = c("survey", "survey_sampler", "sampler", "survey_type_lut", 
-             "sampling_program_lut", "area_surveyed_lut", "data_review_status_lut",
-             "survey_completion_status_lut"),
-  Location = c("point_location", "location_type_lut", "management_region_lut",
-               "shellfish_management_area_lut", "beach", "beach_boundary_history",
-               "beach_intertidal_area"),
-  Estimation = c("beach_season", "season_status_lut", "beach_allowance", 
-                 "beach_status_lut","effort_estimate_type_lut", "egress_model",
+  Survey = c("survey", "survey_protocol", "protocol", "survey_person", "person", 
+             "survey_type_lut", "sampling_program_lut", "area_surveyed_lut", 
+             "data_review_status_lut", "survey_completion_status_lut", 
+             "agency_lut", "protocol_type_lut"),
+  Location = c("location", "location_type_lut", "location_boundary", 
+               "location_coordinates", "location_route", "tide_correction",
+               "media_location", "media_type_lut"),
+  Estimation = c("season", "season_status_lut", "location_quota", 
+                 "regulatory_status_lut","effort_estimate_type_lut", "egress_model",
                  "egress_model_type_lut", "species_group_lut", "report_type_lut", 
                  "harvest_unit_type_lut","egress_model_version", "mean_cpue_estimate", 
-                 "mean_effort_estimate", "tide", "tide_strata_lut", 
-                 "beach_inventory"),
+                 "mean_effort_estimate", "tide", "tide_strata_lut", "location_resources"),
   CrabShrimp = c("harvest_depth_range_lut", "harvest_gear_type_lut", 
                  "season_type_lut", "harvest_method_lut"),
   MobileData = c("survey_mobile_device", "mobile_device", "mobile_device_type_lut",
@@ -121,13 +121,13 @@ dm_sf_seg_model = dm_set_segment(dm_sf_model, table_segments)
 
 # Add display color info
 display <- list(
-  accent5 = c("survey", "survey_sampler", "sampler"),
+  accent5 = c("survey", "survey_protocol", "protocol", "survey_person", "person"),
   accent6 = c("mobile_survey_form", "mobile_device", "survey_mobile_device"),
   accent1 = c("survey_event" ,"species_encounter", "individual_species"),
-  accent3 = c("point_location", "management_region_lut", "beach", 
-              "beach_boundary_history", "beach_intertidal_area",
-              "shellfish_management_area_lut", "beach_inventory"),
-  accent4 = c("beach_season", "beach_allowance", "beach_inventory", 
+  accent3 = c("location", "location_boundary", "location_coordinates", 
+              "location_route", "location_resources", "tide_correction",
+              "media_location"),
+  accent4 = c("season", "location_quota", "location_resources", 
               "egress_model", "egress_model_version", "mean_cpue_estimate", 
               "mean_effort_estimate", "tide")
 )
@@ -147,7 +147,7 @@ sf_title_diagram = dm_create_graph(dm_sf_seg_col_model,
                                    view_type = "title_only")
 
 # Export graph
-dm_export_graph(sf_title_diagram, file_name = "Storage/DataDictionary/SFTitleDiagram.pdf")
+dm_export_graph(sf_title_diagram, file_name = "PSSFTitleDiagram.pdf")
 
 #=====================================================================================
 #  Generate location tables diagram

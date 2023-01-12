@@ -105,14 +105,6 @@ COMMENT ON COLUMN location.location_name IS 'Name of location (place name, etc.)
 COMMENT ON COLUMN location.location_description IS 'Extended description of location';
 COMMENT ON COLUMN location.comment_text IS 'Additional comments regarding location';
 
--- location_coordinates
-COMMENT ON TABLE public.location_coordinates IS 'Spatial table holding coordinates for point location records';
-COMMENT ON COLUMN location_coordinates.location_coordinates_id IS 'Universally unique primary key';
-COMMENT ON COLUMN location_coordinates.location_id IS 'Link to location table';
-COMMENT ON COLUMN location_coordinates.horizontal_accuracy IS 'Estimated accuracy of the point in meters';
-COMMENT ON COLUMN location_coordinates.gid IS 'Unique integer ID for geography';
-COMMENT ON COLUMN location_coordinates.geog IS 'Coordinates stored in binary format. EPSG:4326';
-
 -- location_boundary
 COMMENT ON TABLE public.location_boundary IS 'Spatial table holding polygons for beaches, management areas, etc.';
 COMMENT ON COLUMN location_boundary.location_boundary_id IS 'Universally unique primary key';
@@ -125,29 +117,13 @@ COMMENT ON COLUMN location_boundary.inactive_reason IS 'The reason the polygon b
 COMMENT ON COLUMN location_boundary.gid IS 'Unique integer ID for geography';
 COMMENT ON COLUMN location_boundary.geog IS 'Polygon features stored in binary format. EPSG:4326';
 
--- location_route
-COMMENT ON TABLE public.location_route IS 'Spatial table holding line features for flight routes, transects, etc.';
-COMMENT ON COLUMN location_route.location_route_id IS 'Universally unique primary key';
-COMMENT ON COLUMN location_route.location_id IS 'Link to location table';
-COMMENT ON COLUMN location_route.route_code IS 'Short code to identify line feature';
-COMMENT ON COLUMN location_route.route_name IS 'Name of the enclosed line feature';
-COMMENT ON COLUMN location_route.active_datetime IS 'DateTime when line feature became active';
-COMMENT ON COLUMN location_route.inactive_datetime IS 'DateTime when line feature became inactive';
-COMMENT ON COLUMN location_route.inactive_reason IS 'The reason the line feature became inactive';
-COMMENT ON COLUMN location_boundary.gid IS 'Unique integer ID for geography';
-COMMENT ON COLUMN location_boundary.geog IS 'LineString features stored in binary format. EPSG:4326';
-
--- location_inventory
-COMMENT ON TABLE public.location_inventory IS 'Placeholder for historical assessments of resources on Puget Sound beaches and other areas';
-COMMENT ON COLUMN location_inventory.location_inventory_id IS 'Universally unique primary key';
-COMMENT ON COLUMN location_inventory.location_id IS 'Link to the location table';
-COMMENT ON COLUMN location_inventory.survey_type_id IS 'The type of survey conducted (Clam, Oyster, Walkthrough, etc.)';
-COMMENT ON COLUMN location_inventory.species_id IS 'List of shellfish species';
-COMMENT ON COLUMN location_inventory.population_estimate_type IS 'The type of population estimate';
-COMMENT ON COLUMN location_inventory.population_estimate_unit IS 'The unit (count, pounds, etc.) of the estimate';
-COMMENT ON COLUMN location_inventory.survey_completed_datetime IS 'The date the survey was completed?';
-COMMENT ON COLUMN location_inventory.population_estimate IS 'The numeric value of the estimate';
-COMMENT ON COLUMN location_inventory.comment_text IS 'Additional comments on the resources inventoried';
+-- location_coordinates
+COMMENT ON TABLE public.location_coordinates IS 'Spatial table holding coordinates for point location records';
+COMMENT ON COLUMN location_coordinates.location_coordinates_id IS 'Universally unique primary key';
+COMMENT ON COLUMN location_coordinates.location_id IS 'Link to location table';
+COMMENT ON COLUMN location_coordinates.horizontal_accuracy IS 'Estimated accuracy of the point in meters';
+COMMENT ON COLUMN location_coordinates.gid IS 'Unique integer ID for geography';
+COMMENT ON COLUMN location_coordinates.geog IS 'Coordinates stored in binary format. EPSG:4326';
 
 -- location_quota
 COMMENT ON TABLE public.location_quota IS 'Harvest quota data for specific beaches or management areas';
@@ -162,6 +138,30 @@ COMMENT ON COLUMN location_quota.harvest_unit_type_id IS 'The type of harvest un
 COMMENT ON COLUMN location_quota.quota_year IS 'The year that the allowed quota applies to';
 COMMENT ON COLUMN location_quota.allowable_harvest IS 'The allowed quota';
 COMMENT ON COLUMN location_quota.comment_text IS 'Additional comments on the quota allowance';
+
+-- location_resources
+COMMENT ON TABLE public.location_resources IS 'Placeholder for historical assessments of resources on Puget Sound beaches and other areas';
+COMMENT ON COLUMN location_resources.location_resources_id IS 'Universally unique primary key';
+COMMENT ON COLUMN location_resources.location_id IS 'Link to the location table';
+COMMENT ON COLUMN location_resources.survey_type_id IS 'The type of survey conducted (Clam, Oyster, Walkthrough, etc.)';
+COMMENT ON COLUMN location_resources.species_id IS 'List of shellfish species';
+COMMENT ON COLUMN location_resources.population_estimate_type IS 'The type of population estimate';
+COMMENT ON COLUMN location_resources.population_estimate_unit IS 'The unit (count, pounds, etc.) of the estimate';
+COMMENT ON COLUMN location_resources.survey_completed_datetime IS 'The date the survey was completed?';
+COMMENT ON COLUMN location_resources.population_estimate IS 'The numeric value of the estimate';
+COMMENT ON COLUMN location_resources.comment_text IS 'Additional comments on the resources inventoried';
+
+-- location_route
+COMMENT ON TABLE public.location_route IS 'Spatial table holding line features for flight routes, transects, etc.';
+COMMENT ON COLUMN location_route.location_route_id IS 'Universally unique primary key';
+COMMENT ON COLUMN location_route.location_id IS 'Link to location table';
+COMMENT ON COLUMN location_route.route_code IS 'Short code to identify line feature';
+COMMENT ON COLUMN location_route.route_name IS 'Name of the enclosed line feature';
+COMMENT ON COLUMN location_route.active_datetime IS 'DateTime when line feature became active';
+COMMENT ON COLUMN location_route.inactive_datetime IS 'DateTime when line feature became inactive';
+COMMENT ON COLUMN location_route.inactive_reason IS 'The reason the line feature became inactive';
+COMMENT ON COLUMN location_boundary.gid IS 'Unique integer ID for geography';
+COMMENT ON COLUMN location_boundary.geog IS 'LineString features stored in binary format. EPSG:4326';
 
 -- location_type_lut
 COMMENT ON TABLE public.location_type_lut IS 'Type of location (harvester count location, tide station, etc.)';
@@ -225,6 +225,31 @@ COMMENT ON COLUMN mobile_survey_form.survey_id IS 'Link to survey table';
 COMMENT ON COLUMN mobile_survey_form.parent_form_name IS 'Name of the parent form used to record data';
 COMMENT ON COLUMN mobile_survey_form.parent_form_id IS 'ID of the parent form used to record data';
 
+-- organizational_unit_lut
+COMMENT ON TABLE public.organizational_unit_lut IS 'The organizational unit that conducted the survey';
+COMMENT ON COLUMN organizational_unit_lut.organizational_unit_id IS 'Universally unique primary key';
+COMMENT ON COLUMN organizational_unit_lut.agency_id IS 'Link to table listing external agencies. Not currently used';
+COMMENT ON COLUMN organizational_unit_lut.unit_code IS 'Short code for unit';
+COMMENT ON COLUMN organizational_unit_lut.unit_name IS 'Full name of organizational unit';
+
+-- person
+COMMENT ON TABLE public.person IS 'Base information for persons conducting the survey';
+COMMENT ON COLUMN person.person_id IS 'Universally unique primary key';
+COMMENT ON COLUMN person.first_name IS 'First name of person';
+COMMENT ON COLUMN person.last_name IS 'Last name of person';
+COMMENT ON COLUMN person.active_indicator IS 'Flag to indicate if person is still employed';
+
+-- protocol
+COMMENT ON TABLE public.protocol IS 'Identifies where to retrieve survey protocol documentation associated with specific surveys';
+COMMENT ON COLUMN protocol.protocol_id IS 'Universally unique primary key';
+COMMENT ON COLUMN protocol.protocol_type_id IS 'Type of protocol document (Technical report, Online Document, etc.)';
+COMMENT ON COLUMN protocol.protocol_url IS 'The secure file or web address where protocol document is located';
+
+-- protocol_type_lut
+COMMENT ON TABLE public.protocol_type_lut IS 'Categories of survey protocols (Technical report, Online Document, etc.)';
+COMMENT ON COLUMN protocol_type_lut.protocol_type_id IS 'Universally unique primary key';
+COMMENT ON COLUMN protocol_type_lut.protocol_type_description IS 'Description of the protocol categories';
+
 -- regulatory_status_lut
 COMMENT ON TABLE public.regulatory_status_lut IS 'Regulatory status categories (Active, Passive, etc)';
 COMMENT ON COLUMN regulatory_status_lut.regulatory_status_id IS 'Universally unique primary key';
@@ -236,20 +261,6 @@ COMMENT ON TABLE public.report_type_lut IS 'Categories of required reporting typ
 COMMENT ON COLUMN report_type_lut.report_type_id IS 'Universally unique primary key';
 COMMENT ON COLUMN report_type_lut.report_type_code IS 'Code for the egress model types';
 COMMENT ON COLUMN report_type_lut.report_type_description IS 'Description of the egress model categories';
-
--- sampler
-COMMENT ON TABLE public.sampler IS 'Base information for samplers';
-COMMENT ON COLUMN sampler.sampler_id IS 'Universally unique primary key';
-COMMENT ON COLUMN sampler.first_name IS 'First name of sampler';
-COMMENT ON COLUMN sampler.last_name IS 'Last name of sampler';
-COMMENT ON COLUMN sampler.active_indicator IS 'Flag to indicate if sampler is still employed';
-
--- sampling_program_lut
-COMMENT ON TABLE public.sampling_program_lut IS 'The organizational unit that conducted the survey';
-COMMENT ON COLUMN sampling_program_lut.sampling_program_id IS 'Universally unique primary key';
-COMMENT ON COLUMN sampling_program_lut.agency_id IS 'Link to table listing external agencies. Not currently used';
-COMMENT ON COLUMN sampling_program_lut.sampling_program_code IS 'Short code for unit';
-COMMENT ON COLUMN sampling_program_lut.sampling_program_name IS 'Full name of organizational unit';
 
 -- season
 COMMENT ON TABLE public.season IS 'Data for open and closed harvest seasons on recreational beaches';
@@ -318,7 +329,7 @@ COMMENT ON COLUMN species_lut.species IS 'The species name';
 COMMENT ON TABLE public.survey IS 'Top level header information for surveys';
 COMMENT ON COLUMN survey.survey_id IS 'Universally unique primary key';
 COMMENT ON COLUMN survey.survey_type_id IS 'The type of survey conducted (aerial, creel, etc.)';
-COMMENT ON COLUMN survey.sampling_program_id IS 'The organizational unit that conducted the survey';
+COMMENT ON COLUMN survey.organizational_unit_id IS 'The organizational unit that conducted the survey';
 COMMENT ON COLUMN survey.location_id IS 'Link to the location table, describes where the survey occurred';
 COMMENT ON COLUMN survey.area_surveyed_id IS 'Was entire beach surveyed (all, portion, etc.)';
 COMMENT ON COLUMN survey.data_review_status_id IS 'Status of data review (final, preliminary, etc.)';
@@ -355,11 +366,17 @@ COMMENT ON COLUMN survey_mobile_device.survey_mobile_device_id IS 'Universally u
 COMMENT ON COLUMN survey_mobile_device.survey_id IS 'Link to survey table';
 COMMENT ON COLUMN survey_mobile_device.mobile_device_id IS 'Link to mobile_device table';
 
--- survey_sampler
-COMMENT ON TABLE public.survey_sampler IS 'Associative table between survey and sampler tables';
-COMMENT ON COLUMN survey_sampler.survey_sampler_id IS 'Universally unique primary key';
-COMMENT ON COLUMN survey_sampler.survey_id IS 'Link to survey table';
-COMMENT ON COLUMN survey_sampler.sampler_id IS 'Link to sampler table';
+-- survey_protocol
+COMMENT ON TABLE public.survey_protocol IS 'Associative table between survey and protocol tables';
+COMMENT ON COLUMN survey_protocol.survey_protocol_id IS 'Universally unique primary key';
+COMMENT ON COLUMN survey_protocol.survey_id IS 'Link to survey table';
+COMMENT ON COLUMN survey_protocol.protocol_id IS 'Link to protocol table';
+
+-- survey_person
+COMMENT ON TABLE public.survey_person IS 'Associative table between survey and person tables';
+COMMENT ON COLUMN survey_person.survey_person_id IS 'Universally unique primary key';
+COMMENT ON COLUMN survey_person.survey_id IS 'Link to survey table';
+COMMENT ON COLUMN survey_person.person_id IS 'Link to person table';
 
 -- survey_type_lut
 COMMENT ON TABLE public.survey_type_lut IS 'The type of survey conducted (aerial, creel, etc.)';
