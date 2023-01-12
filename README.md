@@ -1,3 +1,3 @@
-# Proposed Database for the WDFW Puget Sound Shellfish Unit 
+# Proposed Puget Sound Shellfish Database 
 
-A repository for the Data Dictionary and create scripts for the proposed WDFW Puget Sound Shellfish database. The data dictionary can be found at: 
+A repository for the proposed WDFW Puget Sound Shellfish database. The Data Dictionary can be found at: 
