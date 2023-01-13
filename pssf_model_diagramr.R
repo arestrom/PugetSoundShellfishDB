@@ -92,7 +92,7 @@ dm_sf_model = as.data_model(dm_sf)
 
 table_segments = list(
   Survey = c("survey", "survey_protocol", "protocol", "survey_person", "person", 
-             "survey_type_lut", "sampling_program_lut", "area_surveyed_lut", 
+             "survey_type_lut", "organizational_unit_lut", "area_surveyed_lut", 
              "data_review_status_lut", "survey_completion_status_lut", 
              "agency_lut", "protocol_type_lut"),
   Location = c("location", "location_type_lut", "location_boundary", 
@@ -156,10 +156,10 @@ dm_export_graph(sf_title_diagram, file_name = "PSSFTitleDiagram.pdf")
 # Define location segments
 location_segments = list(
   Survey = c("survey", "survey_event"),
-  Location = c("point_location", "beach", "beach_intertidal_area", 
-               "location_type_lut", "beach_boundary_history", 
-               "management_region_lut", "shellfish_management_area_lut"),
-  SpeciesEncounter = c("species_encounter")
+  Location = c("location", "location_boundary", "location_coordinates", 
+               "location_route", "location_resources", "tide_correction",
+               "media_location"),
+  SpeciesEncounter = c("species_encounter", "individual_species")
 )
 
 # Add segment info
@@ -168,9 +168,9 @@ dm_sf_loc_seg_model = dm_set_segment(dm_sf_model, location_segments)
 # Set colors
 location_display <- list(
   accent5 = c("survey", "survey_event"),
-  accent3 = c("point_location", "beach", "beach_intertidal_area",
-              "beach_boundary_history", "management_region_lut", 
-              "shellfish_management_area_lut"),
+  accent3 = c("location", "location_boundary", "location_coordinates", 
+              "location_route", "location_resources", "tide_correction",
+              "media_location"),
   accent1 = c("species_encounter", "individual_species")
 )
 
@@ -179,17 +179,17 @@ dm_sf_loc_seg_col_model = dm_set_display(dm_sf_loc_seg_model, location_display)
 
 # Set focus on location tables
 location_focus = list(
-  tables = c("point_location", "beach", "beach_intertidal_area", 
-             "beach_boundary_history", "management_region_lut",
-             "shellfish_management_area_lut", "location_type_lut", 
-             "species_encounter", "survey", "survey_event")
+  tables = c("location", "location_boundary", "location_coordinates", 
+             "location_route", "location_resources", "tide_correction",
+             "media_location", "species_encounter", "survey", 
+             "survey_event")
 )
 
 # Inspect type values
 unique(dm_sf_loc_seg_col_model[["columns"]]$type)
 
 # Update some column values
-dm_sf_loc_seg_col_model[["columns"]]$type[dm_sf_loc_seg_col_model[["columns"]]$type == "USER-DEFINED"] = "geometry"
+dm_sf_loc_seg_col_model[["columns"]]$type[dm_sf_loc_seg_col_model[["columns"]]$type == "USER-DEFINED"] = "geography"
 dm_sf_loc_seg_col_model[["columns"]]$type[dm_sf_loc_seg_col_model[["columns"]]$type == "timestamp with time zone"] = "timestamptz"
 
 # Inspect type values
@@ -215,7 +215,7 @@ sf_location_diagram = dm_create_graph(dm_sf_loc_seg_col_model,
                                       col_attr = c("column", "type", "mandatory"))
 
 # Export graph
-dm_export_graph(sf_location_diagram, file_name = "Storage/DataDictionary/SFLocationDiagram.pdf")
+dm_export_graph(sf_location_diagram, file_name = "PSSFLocationDiagram.pdf")
 
 #=====================================================================================
 #  Generate survey level diagram
@@ -223,11 +223,12 @@ dm_export_graph(sf_location_diagram, file_name = "Storage/DataDictionary/SFLocat
 
 # Define location segments
 survey_segments = list(
-  Survey = c("survey", "survey_type_lut", "sampling_program_lut", 
+  Survey = c("survey", "survey_type_lut", "organizational_unit_lut", 
              "data_review_status_lut", "area_surveyed_lut", 
-             "survey_completion_status_lut"),
-  Location = c("point_location", "beach"),
-  Sampler = c("survey_sampler", "sampler"),
+             "survey_completion_status_lut", "agency_lut"),
+  Location = c("location"),
+  Protocol = c("protocol", "survey_protocol", "protocol_type_lut"),
+  Sampler = c("survey_person", "person"),
   MobileData = c("survey_mobile_device", "mobile_device", "mobile_device_type_lut",
                  "mobile_survey_form")
 )
@@ -238,8 +239,9 @@ dm_sf_survey_seg_model = dm_set_segment(dm_sf_model, survey_segments)
 # Set colors
 survey_display <- list(
   accent5 = c("survey"),
-  accent3 = c("point_location", "beach"),
-  accent4 = c("survey_sampler", "sampler"),
+  accent3 = c("location"),
+  accent1 = c("protocol", "survey_protocol"),
+  accent4 = c("survey_person", "person"),
   accent6 = c("survey_mobile_device", 
               "mobile_device", "mobile_survey_form")
 )
@@ -249,18 +251,20 @@ dm_sf_survey_seg_col_model = dm_set_display(dm_sf_survey_seg_model, survey_displ
 
 # Set focus on survey tables
 survey_focus = list(
-  tables = c("survey", "survey_type_lut", "sampling_program_lut", 
+  tables = c("survey", "survey_type_lut", "organizational_unit_lut", 
              "data_review_status_lut", "area_surveyed_lut", 
-             "survey_completion_status_lut", "point_location", "beach",
-             "survey_sampler", "sampler", "survey_mobile_device", 
-             "mobile_device", "mobile_device_type_lut", "mobile_survey_form")
+             "survey_completion_status_lut", "location",
+             "survey_person", "person", "survey_mobile_device",
+             "protocol", "survey_protocol", "protocol_type_lut", 
+             "mobile_device", "mobile_device_type_lut", 
+             "mobile_survey_form")
 )
 
 # Inspect type values
 unique(dm_sf_survey_seg_col_model[["columns"]]$type)
 
 # Update some column values
-dm_sf_survey_seg_col_model[["columns"]]$type[dm_sf_survey_seg_col_model[["columns"]]$type == "USER-DEFINED"] = "geometry"
+dm_sf_survey_seg_col_model[["columns"]]$type[dm_sf_survey_seg_col_model[["columns"]]$type == "USER-DEFINED"] = "geography"
 dm_sf_survey_seg_col_model[["columns"]]$type[dm_sf_survey_seg_col_model[["columns"]]$type == "timestamp with time zone"] = "timestamptz"
 
 # Inspect type values
@@ -286,7 +290,7 @@ sf_survey_level_diagram = dm_create_graph(dm_sf_survey_seg_col_model,
                                           col_attr = c("column", "type", "mandatory"))
 
 # Export graph
-dm_export_graph(sf_survey_level_diagram, file_name = "Storage/DataDictionary/SFSurveyDiagram.pdf")
+dm_export_graph(sf_survey_level_diagram, file_name = "PSSFSurveyDiagram.pdf")
 
 
 #=====================================================================================
@@ -296,7 +300,7 @@ dm_export_graph(sf_survey_level_diagram, file_name = "Storage/DataDictionary/SFS
 # Define event segments
 event_segments = list(
   Survey = c("survey"),
-  Location = c("point_location", "beach"),
+  Location = c("location"),
   SurveyEvent = c("survey_event", "harvest_depth_range_lut", "harvest_gear_type_lut", 
                   "harvester_type_lut", "harvest_method_lut"),
   SpeciesEncounter = c("species_encounter", "species_lut", "catch_result_type_lut", 
@@ -310,7 +314,7 @@ dm_sf_event_seg_model = dm_set_segment(dm_sf_model, event_segments)
 # Set colors
 event_display <- list(
   accent5 = c("survey"),
-  accent3 = c("point_location", "beach"),
+  accent3 = c("location"),
   accent4 = c("species_encounter"),
   accent1 = c("survey_event"),
   accent7 = c("individual_species")
@@ -321,7 +325,7 @@ dm_sf_event_seg_col_model = dm_set_display(dm_sf_event_seg_model, event_display)
 
 # Set focus on event tables
 event_focus = list(
-  tables = c("survey", "survey_event", "point_location", "beach", 
+  tables = c("survey", "survey_event", "location", 
              "harvest_depth_range_lut", "harvest_gear_type_lut", 
              "harvester_type_lut", "harvest_method_lut", 
              "species_encounter", "species_lut", "catch_result_type_lut", 
@@ -332,7 +336,7 @@ event_focus = list(
 unique(dm_sf_event_seg_col_model[["columns"]]$type)
 
 # Update some column values
-dm_sf_event_seg_col_model[["columns"]]$type[dm_sf_event_seg_col_model[["columns"]]$type == "USER-DEFINED"] = "geometry"
+dm_sf_event_seg_col_model[["columns"]]$type[dm_sf_event_seg_col_model[["columns"]]$type == "USER-DEFINED"] = "geography"
 dm_sf_event_seg_col_model[["columns"]]$type[dm_sf_event_seg_col_model[["columns"]]$type == "timestamp with time zone"] = "timestamptz"
 
 # Inspect type values
@@ -358,7 +362,7 @@ sf_event_encounter_diagram = dm_create_graph(dm_sf_event_seg_col_model,
                                              col_attr = c("column", "type", "mandatory"))
 
 # Export graph
-dm_export_graph(sf_event_encounter_diagram, file_name = "Storage/DataDictionary/SFSurveyEventDiagram.pdf")
+dm_export_graph(sf_event_encounter_diagram, file_name = "PSSFSurveyEventDiagram.pdf")
 
 #=====================================================================================
 # Generate Harvest Estimate diagram
@@ -366,14 +370,14 @@ dm_export_graph(sf_event_encounter_diagram, file_name = "Storage/DataDictionary/
 
 # Define harvest estimation segments
 harvest_segments = list(
-  Location = c("point_location", "beach"),
-  Estimation = c("beach_season", "beach_allowance", "egress_model", 
+  Location = c("location", "tide_correction"),
+  Estimation = c("season", "location_quota", "egress_model", 
                  "egress_model_version", "tide", "tide_strata_lut",
-                 "egress_model_type_lut","beach_status_lut", 
+                 "egress_model_type_lut","regulatory_status_lut", 
                  "report_type_lut", "harvest_unit_type_lut",
                  "effort_estimate_type_lut", "species_group_lut", 
                  "season_status_lut"),
-  PriorEstimates = c("beach_inventory", "mean_cpue_estimate", 
+  PriorEstimates = c("location_resources", "mean_cpue_estimate", 
                      "mean_effort_estimate")
 )
 
@@ -382,10 +386,10 @@ dm_sf_harvest_seg_model = dm_set_segment(dm_sf_model, harvest_segments)
 
 # Set colors
 harvest_display <- list(
-  accent3 = c("point_location", "beach"),
-  accent4 = c("beach_season", "beach_allowance", "egress_model", 
+  accent3 = c("location", "tide_correction"),
+  accent4 = c("season", "location_quota", "egress_model", 
               "egress_model_version", "tide"),
-  accent6 = c("beach_inventory", "mean_cpue_estimate", 
+  accent6 = c("location_resources", "mean_cpue_estimate", 
               "mean_effort_estimate")
 )
 
@@ -394,13 +398,13 @@ dm_sf_harvest_seg_col_model = dm_set_display(dm_sf_harvest_seg_model, harvest_di
 
 # Set focus on estimation tables
 harvest_focus = list(
-  tables = c("point_location", "beach", "beach_season", 
-             "beach_allowance", "egress_model", 
+  tables = c("location", "tide_correction", "season", 
+             "location_quota", "egress_model", 
              "egress_model_version", "tide", "tide_strata_lut",
-             "egress_model_type_lut","beach_status_lut", 
+             "egress_model_type_lut","regulatory_status_lut", 
              "report_type_lut", "harvest_unit_type_lut",
              "effort_estimate_type_lut", "species_group_lut", 
-             "season_status_lut", "beach_inventory", 
+             "season_status_lut", "location_resources", 
              "mean_cpue_estimate", "mean_effort_estimate")
 )
 
@@ -408,7 +412,7 @@ harvest_focus = list(
 unique(dm_sf_harvest_seg_col_model[["columns"]]$type)
 
 # Update some column values
-dm_sf_harvest_seg_col_model[["columns"]]$type[dm_sf_harvest_seg_col_model[["columns"]]$type == "USER-DEFINED"] = "geometry"
+dm_sf_harvest_seg_col_model[["columns"]]$type[dm_sf_harvest_seg_col_model[["columns"]]$type == "USER-DEFINED"] = "geography"
 dm_sf_harvest_seg_col_model[["columns"]]$type[dm_sf_harvest_seg_col_model[["columns"]]$type == "timestamp with time zone"] = "timestamptz"
 
 # Inspect type values
@@ -434,7 +438,7 @@ sf_harvest_estimate_diagram = dm_create_graph(dm_sf_harvest_seg_col_model,
                                               col_attr = c("column", "type", "mandatory"))
 
 # Export graph
-dm_export_graph(sf_harvest_estimate_diagram, file_name = "Storage/DataDictionary/SFHarvestEstimateDiagram.pdf")
+dm_export_graph(sf_harvest_estimate_diagram, file_name = "PSSFHarvestEstimateDiagram.pdf")
 
 
 
