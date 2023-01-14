@@ -228,7 +228,7 @@ survey_segments = list(
              "survey_completion_status_lut", "agency_lut"),
   Location = c("location"),
   Protocol = c("protocol", "survey_protocol", "protocol_type_lut"),
-  Sampler = c("survey_person", "person"),
+  Surveyor = c("survey_person", "person"),
   MobileData = c("survey_mobile_device", "mobile_device", "mobile_device_type_lut",
                  "mobile_survey_form")
 )
@@ -377,7 +377,7 @@ harvest_segments = list(
                  "report_type_lut", "harvest_unit_type_lut",
                  "effort_estimate_type_lut", "species_group_lut", 
                  "season_status_lut"),
-  PriorEstimates = c("location_resources", "mean_cpue_estimate", 
+  ArchivedEstimates = c("location_resources", "mean_cpue_estimate", 
                      "mean_effort_estimate")
 )
 
