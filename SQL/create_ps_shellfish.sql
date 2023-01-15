@@ -11,17 +11,14 @@
 -- 8. Add intertidal_area to location_type_lut
 
 -- WA State Standards: 
--- Dept of Ecology (2927: https://ecology.wa.gov/Research-Data/Data-resources/Geographic-Information-Systems-GIS/Standards)
--- DNR apparently posts in both SPS EPSG:2927 and web mercator EPSG:3857
--- Selecting 4326 based on simplicity in understanding coordinates. Relatively small amount of data, so probably no big
---  performance hit
+-- Dept of Ecology (EPSG:2927: https://ecology.wa.gov/Research-Data/Data-resources/Geographic-Information-Systems-GIS/Standards)
+-- DNR apparently posts in both State Plane South EPSG:2927 and web mercator EPSG:3857
+-- Settling on EPSG:4326 based on simplicity in understanding coordinates. Any performance hit is likely to be minimal.
 
 COMMENT ON DATABASE ps_shellfish
     IS 'Database for Puget Sound Shellfish Unit';
-    
---GRANT ALL ON DATABASE ps_shellfish TO stromas;
 
--- Create tables (Query window on database shellfish) -------------------
+-- Create tables (Query window on database ps_shellfish) -------------------
 
 CREATE TABLE agency_lut (
     agency_id uuid DEFAULT gen_random_uuid() NOT NULL,
