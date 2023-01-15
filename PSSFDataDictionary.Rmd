@@ -17,21 +17,21 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 # Introduction
-The proposed WDFW *Puget Sound Shellfish* database, described below, is intended to house data needed by Puget Sound Shellfish biologist to generate harvest estimates and manage fisheries for clams, oysters, crab, and shrimp in the Puget Sound Basin. This is an amended version of the current *Shellfish* database model that currently houses data for the Intertidal Shellfish Unit. Changes were made to generalize the current model, and to allow for more flexible storage of a wider range of data. 
+The proposed WDFW *Puget Sound Shellfish* database, described below, is intended to house data used by Puget Sound Shellfish biologist to generate harvest estimates and manage fisheries for clams, oysters, crab, and shrimp in the Puget Sound Basin. This is an amended version of the current *Shellfish* database model that currently houses data for the Intertidal Shellfish Unit. Changes were made to generalize the current model and allow for more flexible storage of a wider range of data. 
 
 #### Rationale for a new database  
 
-Development of the new database was motivated largely by the desire to: 
+The new database: 
 
-* Improve storage of spatial data, by normalizing all geographical features underneath one core *location* table.
-* Generalize storage of those geographic features into separate tables for lines, points, and polygons.
-* Store GIS data in a more approachable *latitude-longitude* format.  
-* Generalize the non-spatial parts of the current data model to more flexibly store additional types of data.
-* Add functionality to allow storing links to survey protocal documents, images, and other media. 
+* Improves storage of spatial data, by normalizing all geographical features underneath one core *location* table.
+* Generalizes storage of those geographic features into separate tables for lines, points, and polygons.
+* Stores GIS data in a more approachable *latitude-longitude* format.  
+* Generalizes the non-spatial parts of the current data model to more flexibly store additional types of data.
+* Adds functionality to allow storing links to survey protocol documents, images, and other media. 
 
-The general aim of the data model is to provide a *one-database* solution for all survey and ancillary data needed to generate harvest estimates. Safety is enhanced by automated daily backups. The database enables biologist to keep all their survey, GIS, and management argreement data in one place. It avoids the need to piece together data from disparate sources during the analysis phase, and allows the current set of programming code used to generate harvest estimates to draw all needed datasets from one comprehensive, and properly linked location.  
+The data model provides a *one-database* solution for all survey and ancillary data needed to generate harvest estimates. Safety is enhanced by automated daily backups. The database enables biologist to keep all their survey, GIS, and management argreement data in one place. It avoids the need to piece together data from disparate sources during the analysis phase, and allows the current set of programming code used to generate harvest estimates to draw all needed datasets from one comprehensive, and properly linked location.  
 
-To facilitate data sharing, the *Puget Sound Shellfish* database has been designed using technology that make it easier to integrate and disseminate data. For example, by using universally unique IDs (UUIDs) for database keys, the need for central coordination in assigning database keys has been eliminated. By hosting the database remotely in the cloud, there is greater flexibility in engineering secure solutions to allow outside entities to easily access and use the data.
+To facilitate data sharing, the database has been designed using technology that make it easier to integrate and disseminate data. For example, by using universally unique IDs (UUIDs) for database keys, the need for central coordination in assigning database keys has been eliminated. By hosting the database remotely in the cloud, there is greater flexibility in engineering secure solutions to allow outside entities to easily access and use the data.
 
 #### Spatial features
 
@@ -39,9 +39,9 @@ The *Puget Sound Shellfish* database allows for storing spatial data types. With
 
 The primary change from the existing *Shellfish* database is that the new model stores all GIS data as a set of separate tables for points, lines, and polygons, organized under the central *location* table. Also, instead of storing GIS data in a projected geometry format (EPSG:2927), points, lines, and polygons are now stored in the somewhat more approachable, and familiar, geographical, *latitude-longitude* (EPSG:4326), format. 
 
-#### Overview diagram (table names only)
+#### Overview diagram (table names)
 
-![Table names only diagram](./PSSFTitleDiagram.pdf){width=100% height=1575}
+![Table names only overview](./PSSFTitleDiagram.pdf){width=100% height=1575}
 
 #### Notes on table descriptions
 
@@ -185,7 +185,7 @@ get_text_item <- function(x, item = 2, sep= " ") {
 
 # Location  
 
-### Location focused diagram
+### Location diagram
 
 ![Location focused diagram](./PSSFLocationDiagram.pdf){width=100% height=1325}
 
@@ -316,9 +316,9 @@ knitr::kable(meta_data)
 
 # Survey
 
-### Survey focused diagram
+### Survey diagram
 
-![Survey level diagram](./PSSFSurveyDiagram.pdf){width=100% height=1325}
+![Survey focused diagram](./PSSFSurveyDiagram.pdf){width=100% height=1325}
 
 ### Survey
 ##### *`r pg_table_comment("survey", db_source, host_source)`*
@@ -605,9 +605,9 @@ kable(dat[, 1:2])
 
 # Survey Event
 
-### Survey Event focused diagram
+### Survey Event diagram
 
-![Survey level diagram](./PSSFSurveyEventDiagram.pdf){width=100% height=900}
+![Survey Event focused diagram](./PSSFSurveyEventDiagram.pdf){width=100% height=900}
 
 ### Survey Event
 ##### *`r pg_table_comment("survey_event", db_source, host_source)`*
@@ -838,7 +838,7 @@ kable(dat[, 1:3])
 
 ### Estimation diagram
 
-![Harvest estimation diagram](./PSSFHarvestEstimateDiagram.pdf){width=100% height=1800}
+![Estimation focused diagram](./PSSFHarvestEstimateDiagram.pdf){width=100% height=1800}
 
 ### Season
 ##### *`r pg_table_comment("season", db_source, host_source)`*
