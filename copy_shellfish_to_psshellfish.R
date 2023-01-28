@@ -6,9 +6,9 @@
 #
 # ToDo: 
 #  1. Copy over, or create, tables needed for data dictionary. DONE. 
-#  2. Add code to copy over remaining data tables. 
+#  2. Add code to copy over remaining data tables. Done. 
 #
-# AS 2023-01-15
+# AS 2023-01-27
 #=================================================================
 
 # Clear workspace
@@ -204,7 +204,8 @@ if ( nrow(diff_counts) > 0 ) {
 # rm(list = c("dat"))
 # 
 # # Create LUT
-# new_dat = tibble(organizational_unit_id = get_uuid(2L),
+# new_dat = tibble(organizational_unit_id = c("063c1e6f-6143-410c-b03d-88b1ceac06bd",
+#                                             "f1de1d54-d750-449f-a700-dc33ebec04c6"),
 #                  agency_id = rep("bbe4126e-6081-44e3-af1b-012c98290603", 2),  # WDFW
 #                  unit_code = c("Crustacean", "Intertidal"),
 #                  unit_name = c("WDFW Puget Sound Crustacean Management Unit",
@@ -1119,16 +1120,229 @@ if ( nrow(diff_counts) > 0 ) {
 # tbl = Id(schema = "public", table = "season")
 # DBI::dbWriteTable(pg_con, tbl, dat, row.names = FALSE, append = TRUE, copy = TRUE)
 # DBI::dbDisconnect(pg_con)
-
-# egress_model ===============
-
-
-# STOPPED HERE. ALL GOOD TO HERE.
-
-
-
-
-
+# 
+# # egress_model_version ===============
+# 
+# # Read
+# pg_con = pg_con_local(dbname = "shellfish")
+# dat = dbReadTable(pg_con, 'egress_model_version')
+# dbDisconnect(pg_con)
+# 
+# # Write
+# pg_con = pg_con_local(dbname = "ps_shellfish")
+# tbl = Id(schema = "public", table = "egress_model_version")
+# DBI::dbWriteTable(pg_con, tbl, dat, row.names = FALSE, append = TRUE, copy = TRUE)
+# DBI::dbDisconnect(pg_con)
+# 
+# # Clean up
+# rm(list = c("dat"))
+# 
+# # egress_model ===============
+# 
+# # Read
+# pg_con = pg_con_local(dbname = "shellfish")
+# dat = dbReadTable(pg_con, 'egress_model')
+# dbDisconnect(pg_con)
+# 
+# # Write
+# pg_con = pg_con_local(dbname = "ps_shellfish")
+# tbl = Id(schema = "public", table = "egress_model")
+# DBI::dbWriteTable(pg_con, tbl, dat, row.names = FALSE, append = TRUE, copy = TRUE)
+# DBI::dbDisconnect(pg_con)
+# 
+# # Clean up
+# rm(list = c("dat"))
+# 
+# # survey ===============
+# 
+# # Read
+# pg_con = pg_con_local(dbname = "shellfish")
+# dat = dbReadTable(pg_con, 'survey')
+# dbDisconnect(pg_con)
+# 
+# # Check if any values in sampling unit
+# unique(dat$sampling_program_id)
+# 
+# # Rearrange and rename fields
+# dat = dat |>
+#   select(survey_id, survey_type_id, organizational_unit_id = sampling_program_id,
+#          location_id = point_location_id, area_surveyed_id, data_review_status_id,
+#          survey_completion_status_id, survey_datetime, start_datetime, end_datetime,
+#          comment_text, created_datetime, created_by, modified_datetime,
+#          modified_by)
+# 
+# # Write
+# pg_con = pg_con_local(dbname = "ps_shellfish")
+# tbl = Id(schema = "public", table = "survey")
+# DBI::dbWriteTable(pg_con, tbl, dat, row.names = FALSE, append = TRUE, copy = TRUE)
+# DBI::dbDisconnect(pg_con)
+# 
+# # Clean up
+# rm(list = c("dat"))
+# 
+# survey_event ===============
+# 
+# # Read
+# pg_con = pg_con_local(dbname = "shellfish")
+# dat = dbReadTable(pg_con, 'survey_event')
+# dbDisconnect(pg_con)
+# 
+# # Rearrange and rename fields
+# dat = dat |>
+#   select(survey_event_id, survey_id, event_location_id, harvester_type_id,
+#          harvest_method_id, harvest_gear_type_id, harvest_depth_range_id,
+#          event_number, event_datetime, harvester_count, harvest_gear_count,
+#          harvester_zip_code, comment_text, created_datetime, created_by, 
+#          modified_datetime, modified_by)
+# 
+# # Write
+# pg_con = pg_con_local(dbname = "ps_shellfish")
+# tbl = Id(schema = "public", table = "survey_event")
+# DBI::dbWriteTable(pg_con, tbl, dat, row.names = FALSE, append = TRUE, copy = TRUE)
+# DBI::dbDisconnect(pg_con)
+# 
+# # Clean up
+# rm(list = c("dat"))
+# 
+# species_encounter ===============
+# 
+# # Read
+# pg_con = pg_con_local(dbname = "shellfish")
+# dat = dbReadTable(pg_con, 'species_encounter')
+# dbDisconnect(pg_con)
+# 
+# # Write
+# pg_con = pg_con_local(dbname = "ps_shellfish")
+# tbl = Id(schema = "public", table = "species_encounter")
+# DBI::dbWriteTable(pg_con, tbl, dat, row.names = FALSE, append = TRUE, copy = TRUE)
+# DBI::dbDisconnect(pg_con)
+# 
+# # Clean up
+# rm(list = c("dat"))
+# 
+# # individual_species ===============
+# 
+# # Read
+# pg_con = pg_con_local(dbname = "shellfish")
+# dat = dbReadTable(pg_con, 'individual_species')
+# dbDisconnect(pg_con)
+# 
+# # Write
+# pg_con = pg_con_local(dbname = "ps_shellfish")
+# tbl = Id(schema = "public", table = "individual_species")
+# DBI::dbWriteTable(pg_con, tbl, dat, row.names = FALSE, append = TRUE, copy = TRUE)
+# DBI::dbDisconnect(pg_con)
+# 
+# # Clean up
+# rm(list = c("dat"))
+# 
+# # tide ===============
+# 
+# # Read
+# pg_con = pg_con_local(dbname = "shellfish")
+# dat = dbReadTable(pg_con, 'tide')
+# dbDisconnect(pg_con)
+# 
+# # Write
+# pg_con = pg_con_local(dbname = "ps_shellfish")
+# tbl = Id(schema = "public", table = "tide")
+# DBI::dbWriteTable(pg_con, tbl, dat, row.names = FALSE, append = TRUE, copy = TRUE)
+# DBI::dbDisconnect(pg_con)
+# 
+# # Clean up
+# rm(list = c("dat"))
+#
+# # mean_cpue_estimate ===============
+# 
+# # Read
+# pg_con = pg_con_local(dbname = "shellfish")
+# dat = dbReadTable(pg_con, 'mean_cpue_estimate')
+# dbDisconnect(pg_con)
+# 
+# # Rearrange and rename fields
+# dat = dat |>
+#   select(mean_cpue_estimate_id, location_id = beach_id, 
+#          location_code = beach_number, location_name = beach_name,
+#          estimation_year, flight_season, species_code,
+#          survey_count, mean_cpue, created_datetime, created_by,
+#          modified_datetime, modified_by)
+# 
+# # Write
+# pg_con = pg_con_local(dbname = "ps_shellfish")
+# tbl = Id(schema = "public", table = "mean_cpue_estimate")
+# DBI::dbWriteTable(pg_con, tbl, dat, row.names = FALSE, append = TRUE, copy = TRUE)
+# DBI::dbDisconnect(pg_con)
+# 
+# # Clean up
+# rm(list = c("dat"))
+# 
+# # mean_effort_estimate ===============
+# 
+# # Read
+# pg_con = pg_con_local(dbname = "shellfish")
+# dat = dbReadTable(pg_con, 'mean_effort_estimate')
+# dbDisconnect(pg_con)
+# 
+# # Rearrange and rename fields
+# dat = dat |>
+#   select(mean_effort_estimate_id, location_id = beach_id, 
+#          location_code = beach_number, location_name = beach_name,
+#          estimation_year, tide_strata, flight_season, mean_effort,
+#          tide_count, created_datetime, created_by, modified_datetime, 
+#          modified_by)
+# 
+# # Write
+# pg_con = pg_con_local(dbname = "ps_shellfish")
+# tbl = Id(schema = "public", table = "mean_effort_estimate")
+# DBI::dbWriteTable(pg_con, tbl, dat, row.names = FALSE, append = TRUE, copy = TRUE)
+# DBI::dbDisconnect(pg_con)
+# 
+# # Clean up
+# rm(list = c("dat"))
+#
+#==============================================================================
+# Reset gid sequences. Needed after bulk copy uploads
+#==============================================================================
+# 
+# # Get the current max_gid from the location_boundary table
+# qry = "select max(gid) from location_boundary"
+# pg_con = pg_con_local(dbname = "ps_shellfish")
+# max_gid = DBI::dbGetQuery(pg_con, qry)
+# DBI::dbDisconnect(pg_con)
+# 
+# # Code to reset sequence
+# qry = glue("SELECT setval('location_boundary_gid_seq', {max_gid}, true)")
+# pg_con = pg_con_local(dbname = "ps_shellfish")
+# DBI::dbExecute(pg_con, qry)
+# DBI::dbDisconnect(pg_con)
+# 
+# # Get the current max_gid from the location_coordinates table
+# qry = "select max(gid) from location_coordinates"
+# pg_con = pg_con_local(dbname = "ps_shellfish")
+# max_gid = DBI::dbGetQuery(pg_con, qry)
+# DBI::dbDisconnect(pg_con)
+# 
+# # Code to reset sequence
+# qry = glue("SELECT setval('location_coordinates_gid_seq', {max_gid}, true)")
+# pg_con = pg_con_local(dbname = "ps_shellfish")
+# DBI::dbExecute(pg_con, qry)
+# DBI::dbDisconnect(pg_con)
+# 
+# # # Get the current max_gid from the location_coordinates table...None for now!!!
+# # qry = "select max(gid) from location_route"
+# # pg_con = pg_con_local(dbname = "ps_shellfish")
+# # max_gid = DBI::dbGetQuery(pg_con, qry)
+# # DBI::dbDisconnect(pg_con)
+# # 
+# # # Code to reset sequence
+# # qry = glue("SELECT setval('location_route_gid_seq', {max_gid}, true)")
+# # pg_con = pg_con_local(dbname = "ps_shellfish")
+# # DBI::dbExecute(pg_con, qry)
+# # DBI::dbDisconnect(pg_con)
+# 
+# #==========================================================
+# # Done
+# #==========================================================
 
 
 
