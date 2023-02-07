@@ -155,6 +155,7 @@ COMMENT ON COLUMN location_resources.comment_text IS 'Additional comments on the
 COMMENT ON TABLE public.location_route IS 'Spatial table holding line features for flight routes, transects, etc.';
 COMMENT ON COLUMN location_route.location_route_id IS 'Universally unique primary key';
 COMMENT ON COLUMN location_route.location_id IS 'Link to location table';
+COMMENT ON COLUMN location_route.survey_id IS 'Link to survey table';
 COMMENT ON COLUMN location_route.route_code IS 'Short code to identify line feature';
 COMMENT ON COLUMN location_route.route_name IS 'Name of the enclosed line feature';
 COMMENT ON COLUMN location_route.active_datetime IS 'DateTime when line feature became active';

@@ -287,6 +287,7 @@ ALTER TABLE ONLY location_resources
 CREATE TABLE location_route (
     location_route_id uuid DEFAULT gen_random_uuid() NOT NULL,
     location_id uuid NOT NULL,
+    survey_id uuid,
     route_code text NOT NULL,
     route_name text NOT NULL,
     active_datetime timestamptz(6),
@@ -812,6 +813,9 @@ ALTER TABLE ONLY location_resources
     
 ALTER TABLE ONLY location_route
     ADD CONSTRAINT fk_location__location_route FOREIGN KEY (location_id) REFERENCES location (location_id);
+    
+ALTER TABLE ONLY location_route
+    ADD CONSTRAINT fk_survey__location_route FOREIGN KEY (survey_id) REFERENCES survey (survey_id);
 
 ------------------------
     
@@ -981,6 +985,7 @@ CREATE INDEX location_resources_location_idx ON location_resources (location_id)
 
 -- location_route
 CREATE INDEX location_route_location_idx ON location_route (location_id);
+CREATE INDEX location_route_survey_idx ON location_route (survey_id);
 
 -- media_location
 CREATE INDEX media_location_location_idx ON media_location (location_id);

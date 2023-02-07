@@ -226,7 +226,7 @@ survey_segments = list(
   Survey = c("survey", "survey_type_lut", "organizational_unit_lut", 
              "data_review_status_lut", "area_surveyed_lut", 
              "survey_completion_status_lut", "agency_lut"),
-  Location = c("location"),
+  Location = c("location", "location_route"),
   Protocol = c("protocol", "survey_protocol", "protocol_type_lut"),
   Surveyor = c("survey_person", "person"),
   MobileData = c("survey_mobile_device", "mobile_device", "mobile_device_type_lut",
@@ -239,7 +239,7 @@ dm_sf_survey_seg_model = dm_set_segment(dm_sf_model, survey_segments)
 # Set colors
 survey_display <- list(
   accent5 = c("survey"),
-  accent3 = c("location"),
+  accent3 = c("location", "location_route"),
   accent1 = c("protocol", "survey_protocol"),
   accent4 = c("survey_person", "person"),
   accent6 = c("survey_mobile_device", 
@@ -253,7 +253,7 @@ dm_sf_survey_seg_col_model = dm_set_display(dm_sf_survey_seg_model, survey_displ
 survey_focus = list(
   tables = c("survey", "survey_type_lut", "organizational_unit_lut", 
              "data_review_status_lut", "area_surveyed_lut", 
-             "survey_completion_status_lut", "location",
+             "survey_completion_status_lut", "location", "location_route",
              "survey_person", "person", "survey_mobile_device",
              "protocol", "survey_protocol", "protocol_type_lut", 
              "mobile_device", "mobile_device_type_lut", 
