@@ -333,13 +333,18 @@ blocc = blocc_st |>
          created_datetime, created_by,
          modified_datetime, modified_by)
 
-# Anti-join to keep only new data. Also get rid of duplicate location_IDs added by Kat
-blocc_new = blocc |> 
-  anti_join(ps_dat, by = "location_id") |> 
-  filter(!created_by == "kmeyer")
+# Get location_boundary data already existing in ps_shellfish
+pg_con = pg_con_local(dbname = "ps_shellfish")
+tbl = Id(schema = "public", table = "location_boundary")
+psb_dat = dbReadTable(pg_con, tbl)
+dbDisconnect(pg_con)
 
-unique(bloc_new$created_by)
-unique(bloc_new$modified_by)
+# Anti-join to keep only new data
+blocc_new = blocc |> 
+  anti_join(psb_dat, by = "location_boundary_id")
+
+unique(blocc_new$created_by)
+unique(blocc_new$modified_by)
 
 # Write plocc to ps_shellfish
 pg_con = pg_con_local(dbname = "ps_shellfish")
